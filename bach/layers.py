@@ -42,6 +42,7 @@ class DenseLayer(Layer):
                dJ_dY @ self.W.T,\
                X.T @ dJ_dY,\
                dJ_dY
+        dJ_dB = dJ_dB.sum(dJ_dY, axis=0, keepdims=True) # enforce compatibility
         return dJ_dX, dJ_dW, dJ_dB
 
 class ActivationLayer(Layer):
