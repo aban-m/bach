@@ -43,3 +43,30 @@ class DenseLayer(Layer):
                X.T @ dJ_dY,\
                dJ_dY
         return dJ_dX, dJ_dW, dJ_dB
+
+class ActivationLayer(Layer):
+    def __init__(self, m, f, df = None):
+        n = m
+        super().__init__(m, n)
+        self.f = f
+        self.df = df if df is not None else f.d
+
+        self.last_X = None
+        self.last_Y = None
+
+    def forward(self, X):
+        super().forward(X)
+
+        Y = self.f(X)
+
+        self.last_X = X
+        self.last_Y = Y
+
+        return Y
+
+    def backward(self, dJ_dY):
+        X, Y = self.last_X, self.last_Y
+            
+        super().backward(dJ_dY, X)
+
+        return dJ_dY * self.df(X, Y)
