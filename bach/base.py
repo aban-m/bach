@@ -1,8 +1,13 @@
 import numpy as np
-from utils import *
+
+try:
+    from .utils import *
+except ImportError:
+    from utils import *
 
 class Layer(object):
     def __init__(self, m, n):
+        assert m and n
         self.m = m
         self.n = n
 
@@ -12,7 +17,7 @@ class Layer(object):
 class DenseLayer(Layer):
     def __init__(self, m, n, w_init = init_normal, b_init = init_zeros):
         super().__init__(m, n)
-        self.weights = z_init(n, m)
+        self.weights = w_init(n, m)
         self.biases = b_init(n, 1)
     def forward(self, inp):
         return self.weights @ inp + self.biases
