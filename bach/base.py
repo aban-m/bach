@@ -11,13 +11,35 @@ class Layer(object):
         self.m = m
         self.n = n
 
-    def forward(self, inp): raise NotImplementedError
-    def backward(self, out): raise NotImplementedError
+    def forward(self, *inp): pass
+    def backward(self, *out): pass
+
+    def __call__(self, *inp): return self.forward(*inp)
 
 class DenseLayer(Layer):
     def __init__(self, m, n, w_init = init_normal, b_init = init_zeros):
         super().__init__(m, n)
-        self.weights = w_init(n, m)
-        self.biases = b_init(n, 1)
-    def forward(self, inp):
-        return self.weights @ inp + self.biases
+        self.W = w_init(m, n)
+        self.B = b_init(1, n)
+
+        self.last_X = None
+        self.last_Y = None
+        
+    def forward(self, X):
+        super().forward(X)
+        Y = X @ self.W + self.B
+        
+        self.last_X = X
+        self.last_Y = Y
+
+        return Y
+    
+    def backward(self, dJ_dY, X=None):
+        if X is None:
+            X = self.last_X
+        super().backward(dJ_dY, X)
+        dJ_dX, dJ_dW, dJ_dB = \
+               dJ_dY @ self.W.T,\
+               X.T @ dJ_dY,\
+               dJ_dY
+        return dJ_dX, dJ_dW, dJ_dB
