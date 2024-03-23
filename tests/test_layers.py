@@ -5,12 +5,13 @@ import numpy.random as npr
 from random import choice
 
 from bach import layers
-from bach import net
+from bach.net import Network
 from bach.activations import *
 from bach.losses import *
 
 pytestmark = pytest.mark.parametrize('m', [1, 2, 5])
-c = 1
+c = 4
+L = [4, 2, 5, 8, 2, 1]
 
 @pytest.mark.parametrize('layer', [RELU, SIGMOID, LINEAR])
 class TestActForward:
@@ -96,3 +97,4 @@ class TestDenseBackward:
         assert dJ_dB.shape == layer.B.shape, 'dJ_dB failed.'
         assert dJ_dX.shape == X.shape, 'dJ_dX failed.'
         assert not np.any(dJ_dW) and not np.any(dJ_dB), 'Derivative must vanish.'
+

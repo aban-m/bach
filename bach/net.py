@@ -10,13 +10,13 @@ except ImportError:
     from losses import *
 
 class Network(object):
-    def __init__(self, input_shape, initial_layers=[], topology=[], loss=None):
-        self.layers = initial_layers
+    def __init__(self, input_shape, topology=[], loss=None):
+        self.layers = []
         self.input_shape = input_shape
         self.L = len(self.layers)
         self.loss = None
         self.loss_d = None
-        self.set_loss(loss)
+        if loss is not None: self.set_loss(loss)
 
         m = self.input_shape
         for elem in topology:
@@ -31,7 +31,7 @@ class Network(object):
                 if type(act) == str:
                     try: obj = act_lookup[act]
                     except KeyError: raise ValueError(f'Unrecognized activation -- {act}.')
-                if not hasattr(act, 'd'):
+                elif not hasattr(act, 'd'):
                     obj, prime = act
                 self.add(ActivationLayer(n, obj, prime))
             m = n
