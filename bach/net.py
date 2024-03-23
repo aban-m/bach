@@ -62,7 +62,7 @@ class Network(object):
             last = layer(last)
         return last
 
-    def backprop(self, X, y, callbacks=None):
+    def backprop(self, X, y, callbacks=[]):
         assert all(isinstance(callback, Callback) for callback in callbacks)
         ypred = self.forprop(X)
         J = self.loss(y, ypred)
@@ -71,7 +71,8 @@ class Network(object):
         dJ_dY = self.loss_d(y, ypred)
         
         for i, layer in enumerate(reversed(self.layers)):
-            callback.on_iter_start(self.L - i - 1, layer, dJ_dY)
+            for callback in callbacks:
+                callback.on_iter_start(self.L - i - 1, layer, dJ_dY)
             output = layer.backward(dJ_dY)
             dJ_dW = None; dJ_dB = None
             if isinstance(layer, TrainableLayer):
@@ -81,6 +82,7 @@ class Network(object):
             for callback in callbacks:
                 callback.on_back_step(self.L - i - 1, layer, dJ_dY, dJ_dW, dJ_dB)
 
+        return dJ_dY
 
     def fit(self, X, y):
         if self.optimizer is None:
@@ -88,23 +90,3 @@ class Network(object):
         if self.loss is None:
             raise Exception('Loss is not set.')
         self.backprop(X, y, callbacks=[self.optimizer])
-
-
-X = 10*(npr.random((400, 2))-0.5)
-y = X.sum(axis=1, keepdims=True)
-n = Network(2, [(1, 'linear')])
-n.set_loss('mse')
-n.optimizer = GradientDescent(0.01, 0)
-ypred = n.forprop(X)
-print(n.layers[0].W)
-print('Error:', n.loss(ypred, y))
-
-for i in range(20):
-    n.fit(X, y)
-    ypred = n.forprop(X)
-    print('\n\n -- WEIGHTS -- ')
-    print(n.layers[0].W)
-    print(' -- BIASES --')
-    print(n.layers[0].B)
-    print('ERROR:', n.loss(ypred, y))
-    input('....')

@@ -8,7 +8,7 @@ except:
     from layers import TrainableLayer
 
 mse = lambda x, y: np.mean((x - y)**2)
-mse.d = lambda x, y: (2*(x - y))/len(x)
+mse.d = lambda x, y: (2*(y-x))/len(x)
 mse.name = 'mse'
 
 _losses = [mse]
@@ -34,3 +34,10 @@ class GradientDescent(Callback):
         layer.B = (1 - self.d*self.a)*layer.B - self.a * dJ_dB
         layer.W = (1 - self.d*self.a)*layer.W - self.a * dJ_dW
         
+class Logger(Callback):
+    def __init__(self): super().__init__()
+    def on_back_step(self, i, layer, dJ_dX, dJ_dW, dJ_dB):
+        if dJ_dW is None: return
+        print(' --- Layer', i, '---')
+        print('dJ_dW =', dJ_dW, sep='\n', end='\n\n')
+        print('dJ_dB = ', dJ_dB, sep='\n', end='\n\n')
