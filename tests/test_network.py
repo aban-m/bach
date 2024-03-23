@@ -6,7 +6,7 @@ from random import sample
 
 from bach.net import Network
 from bach.activations import *
-from bach.losses import *
+from bach.optimize import *
 
 from itertools import product, islice, cycle
 
@@ -62,7 +62,7 @@ def test_chain(network):
 def test_forward(network):
     X = npr.random((c, network.input_shape))
     try:
-        Y = network.predict(X)
+        Y = network.forprop(X)
         assert Y.shape == (c, network.layers[-1].n), 'Incorrect dimension of X'
     except AssertionError as e: raise e
     except Exception as e: pytest.fail('Could not go forward.')

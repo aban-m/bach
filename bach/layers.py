@@ -16,8 +16,10 @@ class Layer(object):
 
     def __call__(self, *inp): return self.forward(*inp)
 
-class DenseLayer(Layer):
-    def __init__(self, m, n, w_init = init_normal, b_init = init_zeros):
+class TrainableLayer(Layer): pass
+
+class DenseLayer(TrainableLayer):
+    def __init__(self, m, n, w_init = init_unif, b_init = init_zeros):
         super().__init__(m, n)
         self.W = w_init(m, n)
         self.B = b_init(1, n)

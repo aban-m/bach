@@ -7,7 +7,6 @@ from random import choice
 from bach import layers
 from bach.net import Network
 from bach.activations import *
-from bach.losses import *
 
 pytestmark = pytest.mark.parametrize('m', [1, 2, 5])
 c = 4
