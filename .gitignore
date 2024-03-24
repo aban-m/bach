@@ -1,6 +1,8 @@
 *.csv
 *.dat
 *.db
-__pycache__
 *.pyc
 *.bat
+
+__pycache__/
+.pytest_cache/
