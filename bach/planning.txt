@@ -1,0 +1,23 @@
+What to add:
+* Regularization layer.
+* Dropout layer.
+* Batch normalization possibility.
+* RMSprop and Adam.
+* EarlyStopping.
+
+Regularization: Has no trainable parameters, but affects how the gradient is computed.
+Dropout:
+- Can be turned off at test time.
+- Can be "initialized": Before the start of a batch, it generates a random 0-1 array.
+
+Batch norm:
+- Can be "initialized": Before the start of a batch, calculates the norm and variance.
+- Has trainable parameters beta and gamma.
+- [unnecessary] Can "kill" the bias term of the previous layer. Alternatively, this can be implemented by the Builder.
+
+RMSprop & Adam:
+- Have an internal "state" (the exponentially weighted average of previous values).
+- Must know the number of the mini-batch.
+
+EarlyStopping:
+Can trigger stopping of the batch training. Also, keeps monitoring a number of values.

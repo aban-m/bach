@@ -3,6 +3,5 @@
 *.db
 *.pyc
 *.bat
-
 __pycache__/
 .pytest_cache/
